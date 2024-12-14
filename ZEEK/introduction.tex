@@ -1,0 +1,49 @@
+\section{Introduction}
+\subsection{Overview}
+Zeek is a passive, open-source network traffic analyzer extensively utilized in the realm of network security monitoring (NSM) and a plethora of other traffic analysis tasks. Originally developed for security investigations, Zeek's capabilities transcend to performance measurement and network troubleshooting, offering users a comprehensive view of their network activity through detailed logs and analysis features.
+\subsubsection{Comprehensive Logging}
+One of the primary advantages of using Zeek is its ability to produce extensive logs that capture a detailed record of network activities. These logs include:
+\begin{itemize}
+    \item Application-layer transcripts such as HTTP sessions, with details like URIs, headers, MIME types, and server responses.
+    \item DNS requests and responses.
+    \item SSL certificate information.
+    \item Key content from SMTP sessions.
+\end{itemize}
+Zeek formats these logs in structured, tab-separated, or JSON files, making them ideal for post-processing with external software or integration with databases and SIEM products for further analysis.
+
+
+\subsubsection{Built-in Analysis and Detection Capabilities}
+Zeek is not just about logging; it offers built-in functions for various analysis and detection tasks, such as:
+\begin{itemize}
+    \item Extracting files from HTTP sessions.
+    \item Detecting malware by interfacing with external registries.
+    \item Identifying vulnerable software versions and popular web applications on the network.
+    \item Detecting SSH brute-force attacks and validating SSL certificate chains.
+\end{itemize}
+These functionalities are readily available "out of the box," enhancing Zeek's utility as a network analysis tool.
+
+\subsubsection{Customization and Extensibility}
+Zeek stands out for its customizability and extensibility, thanks to its domain-specific scripting language. This language allows users to:
+\begin{itemize}
+    \item Express arbitrary analysis tasks.
+    \item Write custom code for unique analysis requirements, extending the pre-built "standard library" that comes with Zeek.
+\end{itemize}
+
+This feature positions Zeek as a versatile tool that can adapt to various network monitoring and analysis needs beyond its default offerings.
+
+\subsubsection{High-Performance and Scalability}
+Designed to run on commodity hardware, Zeek presents a cost-effective alternative to proprietary network monitoring solutions. Its performance and scalability make it suitable for:
+\begin{itemize}
+    \item High-speed, high-volume network monitoring, including 10GE and 100GE networks.
+    \item Deployment in large-scale environments using Zeek Clusters for load-balancing and centralized management.
+\end{itemize}
+ Zeek's scalability is one of its core strengths, allowing it to accommodate growing network demands without compromising on performance.
+ \subsubsection{Comparison with Other Tools}
+ While Zeek excels in generating high-fidelity network logs and analysis, it is distinct from:
+
+ \begin{itemize}
+     \item Signature-based IDS systems like Suricata, as Zeek adopts a broader approach to detecting malicious activity through scripting.
+     \item Protocol analyzers like Wireshark, which focus on detailed frame-level traffic representation, unlike Zeek's focus on compact, high-fidelity logs.
+     \newline
+ \end{itemize}
+Zeek offers a balanced and efficient solution for network traffic analysis, combining comprehensive logging, built-in analysis capabilities, and extensive customization options. Its adaptability to both small-scale and large-scale environments, along with its open-source nature, makes Zeek a valuable tool for a wide range of users looking to gain deeper insights into their network activity.

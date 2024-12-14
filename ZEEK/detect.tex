@@ -1,0 +1,249 @@
+\section{Attack detection by observing zeek log}
+Detecting abnormalities, threats, malware, intrusions, and attacks in network logs, especially with tools like Zeek, involves analyzing patterns, anomalies, and specific indicators within the generated log data. Zeek, with its extensive logging capabilities, provides detailed information about various network activities, which can be used to identify potential security incidents. Here are some real-world examples of how Zeek logs can be used to detect security threats, along with the parameters or indicators that might be involved.
+
+\subsection{Detecting Malware Communication}
+\textbf{Process}
+\vspace{8pt}
+\\
+Malware often communicates with command and control (C2) servers to receive instructions or exfiltrate data. Monitoring DNS requests and subsequent connections can help identify such communication patterns.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek logs}
+\begin{itemize}
+    \item \textbf{dns.log}: Contains DNS queries and responses, useful for spotting requests to suspicious domains.
+    \item \textbf{conn.log}: Records connection details, including source and destination IPs, ports, and protocols.
+\end{itemize}
+\vspace{10pt}
+\\
+
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: Frequent or irregular DNS queries to domains with a poor reputation, followed by data transfers to the resolved IPs.
+    \item \textbf{Example}: In dns.log, you might see repeated queries to suspicious-domain[.]com. Corresponding entries in conn.log would show data being transferred to the IP resolved from those DNS queries, especially if the traffic is encrypted or on unusual ports, raising red flags about potential malware communication.
+\end{itemize}
+
+\vspace{8pt}
+\subsection{Identifying Brute Force Attacks}
+\textbf{Process}
+\vspace{8pt}
+\\
+Brute force attacks involve trying multiple usernames and passwords to gain unauthorized access. Monitoring authentication attempts can help identify such attacks.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek Logs}
+\begin{itemize}
+    \item \textbf{ssh.log or ftp.log}: These logs contain details about SSH and FTP sessions, respectively, including authentication successes and failures.
+\end{itemize}
+\vspace{10pt}
+\\
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: Multiple failed authentication attempts from a single IP in a short timeframe.
+    \item \textbf{Example}: In ssh.log, you might notice numerous entries from the same IP address with auth\_success=F, indicating failed login attempts, suggesting a brute force SSH attack.
+\end{itemize}
+
+\vspace{8pt}
+\subsection{Spotting SQL Injection Attempts}
+\textbf{Process}
+\vspace{8pt}
+\\
+SQL injection attacks involve inserting malicious SQL code into input fields, attempting to manipulate databases. Monitoring web request parameters can help identify such attempts.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek Logs}
+\begin{itemize}
+    \item \textbf{http.log}: Contains details of HTTP requests and responses, including URLs and POST data.
+\end{itemize}
+\vspace{10pt}
+\\
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: URLs or HTTP POST data containing SQL commands or syntax.
+    \item \textbf{Example}: In http.log, you might find a GET request with a URL like /index.php?id=' OR '1'='1, attempting to exploit an SQL injection vulnerability.
+\end{itemize}
+
+\vspace{8pt}
+\subsection{Discovering Port Scanning Activity}
+\textbf{Process}
+\vspace{8pt}
+\\
+Port scanning is a technique used by attackers to discover open ports and services. Monitoring for a high volume of connection attempts across various ports from a single source can indicate scanning activity.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek Logs}
+\begin{itemize}
+    \item \textbf{conn.log}: Records all connection attempts, successful or not, including the source and destination IPs and ports.
+\end{itemize}
+\vspace{10pt}
+\\
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: A high number of SYN packets (connection attempts) from one IP to many ports on a target.
+    \item \textbf{Example}: In conn.log, you might see a series of entries from a single source IP to multiple destination ports with many attempts not resulting in established connections, indicative of a port scan.
+\end{itemize}
+
+\vspace{8pt}
+\subsection{Detecting DDoS Attacks}
+\textbf{Process}
+\vspace{8pt}
+\\
+DDoS attacks aim to overwhelm a target with traffic. Monitoring for a sudden influx of traffic from multiple sources to a single target can indicate a DDoS attack.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek Logs}
+\begin{itemize}
+    \item \textbf{http.log, dns.log, or conn.log}: Depending on the attack vector, these logs will show the influx of requests.
+\end{itemize}
+\vspace{10pt}
+\\
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: An unusual spike in traffic volume to a particular service or endpoint from numerous sources.
+    \item \textbf{Example}: http.log might show a dramatic increase in HTTP requests to a specific website from a wide range of IPs, signaling a potential DDoS attack.
+\end{itemize}
+
+\vspace{8pt}
+\subsection{Identifying Data Exfiltration}
+\textbf{Process}
+\vspace{8pt}
+\\
+Data exfiltration involves unauthorized data transfer outside the organization. Monitoring for large or unusual data transfers can help detect exfiltration attempts.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek Logs}
+\begin{itemize}
+    \item \textbf{conn.log}: Provides connection details that can indicate large data transfers.
+    \item \textbf{files.log}: Contains information about files transferred over the network, including sizes and types.
+\end{itemize}
+\vspace{10pt}
+\\
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: Large data transfers to external IPs, especially during off-hours or via non-standard protocols.
+    \item \textbf{Example}: files.log might show a large file transfer over an encrypted connection late at night to an IP that doesn't match known business partners or cloud services, suggesting data exfiltration.
+\end{itemize}
+
+\vspace{8pt}
+\subsection{Detecting Lateral Movement}
+\textbf{Process}
+\vspace{8pt}
+\\
+Lateral movement involves attackers moving through a network, typically after gaining initial access, to locate and access valuable data or systems. Monitoring internal traffic and authentication logs can help identify such behavior.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek Logs}
+\begin{itemize}
+    \item \textbf{conn.log}: For tracking internal connections that might indicate unusual access patterns.
+    \item \textbf{notice.log}: Contains alerts generated by Zeek based on its analysis, which might include suspicious activity indicative of lateral movement.
+\end{itemize}
+\vspace{10pt}
+\\
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: Anomalous internal traffic, such as a host suddenly accessing a large number of other internal hosts or services for which it normally doesn't.
+    \item \textbf{Example}: conn.log shows an internal host making repeated connections to various sensitive internal servers or endpoints in a short time, potentially indicating an attempt at lateral movement within the network.
+\end{itemize}
+
+\vspace{8pt}
+\subsection{Identifying Command and Control (C2) Traffic}
+\textbf{Process}
+\vspace{8pt}
+\\
+C2 servers are used by attackers to maintain communication with compromised systems. Identifying traffic to and from known C2 servers or using known C2 patterns can indicate compromised hosts.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek Logs}
+\begin{itemize}
+    \item \textbf{dns.log}: For identifying DNS requests to known or suspicious C2 domains.
+    \item \textbf{conn.log}: For tracking connections that may be to C2 servers.
+\end{itemize}
+\vspace{10pt}
+\\
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: Repeated connections or DNS queries to known C2 domains or IPs, or to domains with suspicious characteristics (e.g., high entropy, recently registered).
+    \item \textbf{Example}: dns.log shows repeated queries to a domain known to be associated with a C2 server, or conn.log shows persistent connections to an IP flagged as a C2 server, suggesting a compromised host.
+\end{itemize}
+
+\vspace{8pt}
+\subsection{Detecting Phishing Attempts}
+\textbf{Process}
+\vspace{8pt}
+\\
+Phishing attacks often involve deceptive emails and websites to trick users into disclosing sensitive information. Monitoring for access to known phishing sites or for signs of data submission to such sites can help identify victims.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek Logs}
+\begin{itemize}
+    \item \textbf{http.log}: To track HTTP requests to known phishing sites or to sites with characteristics common to phishing pages.
+    \item \textbf{ssl.log}: For identifying SSL connections to suspicious domains, which might be hosting phishing sites.
+\end{itemize}
+\vspace{10pt}
+\\
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: Visits to known phishing domains or to domains with characteristics commonly associated with phishing (e.g., misspelled brand names).
+    \item \textbf{Example}: http.log shows requests to a URL that is a known phishing site, indicating a potential phishing attempt or a compromised user.
+\end{itemize}
+
+\vspace{8pt}
+\subsection{Spotting Encryption Downgrade Attacks}
+\textbf{Process}
+\vspace{8pt}
+\\
+Encryption downgrade attacks involve tricking a communication protocol into using a less secure encryption algorithm, making the encrypted traffic easier to intercept and decipher.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek Logs}
+\begin{itemize}
+    \item \textbf{ssl.log}: Contains details about SSL/TLS handshakes, including the encryption algorithms and cipher suites agreed upon.
+\end{itemize}
+\vspace{10pt}
+\\
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: Use of weak or outdated encryption algorithms or cipher suites during SSL/TLS handshakes.
+    \item \textbf{Example}: ssl.log shows connections using SSLv3 or weak cipher suites, which could indicate an encryption downgrade attack, potentially making the encrypted traffic vulnerable to decryption and analysis.
+\end{itemize}
+
+\vspace{8pt}
+\subsection{Recognizing DNS Tunneling}
+\textbf{Process}
+\vspace{8pt}
+\\
+DNS tunneling is a technique used to encode the data of other programs or protocols in DNS queries and responses. It's often used for data exfiltration or to bypass network security devices.
+\vspace{10pt}
+\\
+
+\noindent \textbf{Zeek Logs}
+\begin{itemize}
+    \item \textbf{dns.log}: For monitoring DNS queries and responses.
+\end{itemize}
+\vspace{10pt}
+\\
+
+\noindent \textbf{Parameters and Example}
+\begin{itemize}
+    \item \textbf{Indicator}: Unusually large DNS queries or a high frequency of DNS requests to a small set of domains, especially with large TXT record responses.
+    \item \textbf{Example}: dns.log shows a significant amount of DNS traffic involving large TXT records to and from a single domain, which might be indicative of DNS tunneling used for data exfiltration or command and control communication.
+\end{itemize}

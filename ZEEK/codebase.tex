@@ -1,0 +1,94 @@
+\section{Codebase Structure}
+Zeek (formerly Bro) is an open-source framework for network analysis, security monitoring, and forensics. Developed with contributions from many developers and led by key contributor Vern Paxson, a UC Berkeley professor, it has become a vital tool in the computer security community.
+\subsection{Language :}
+Zeek is primarily written in C++ and uses scripting languages for its analysis scripts. The transition to C++ has allowed Zeek to leverage the performance and efficiency of compiled languages, making it highly suitable for high-speed network environments.
+
+\subsection{Repository}
+The source code for Zeek is hosted on GitHub, making it accessible for community contributions, issue tracking, and feature requests.
+\begin{itemize}
+\item Access URL: \url{https://github.com/zeek/zeek}
+\item Repository Owner: Zeek
+\end{itemize}
+
+\subsection{Key Components}
+\begin{enumerate}
+    \item \textbf{Packet Capture and Analysis Engine}: : Optimized with C++ for high-throughput network traffic processing, featuring selective data filtering and modular protocol analysis capabilities.
+    \item \textbf{Event Engine}: Built on a C++ publish-subscribe model, it efficiently generates and dispatches network events, separating event creation from processing for flexible script execution
+    \item \textbf{Scripting Language Interpreter}: Integral to Zeek, it executes analysis scripts, offering direct access to network events and data, and supports dynamic script management.
+    \item \textbf{Logging Framework}: Versatile logging system supporting multiple formats like JSON, CSV, and script-driven customization for tailored data recording
+    \item \textbf{Plugin Architecture}: Allows dynamic plugin integration without Zeek restarts, offering APIs for seamless extension of core functionalities
+    \item \textbf{Analysis Scripts and Signature Database}: : Runtime-loaded scripts in Zeek's language define detection logic and extend analysis, with a signature database identifying network threats.
+  
+    
+\end{enumerate}
+\subsection{Directories and Major Files :}
+\subsubsection{/src - Core C++ Code}
+\begin{itemize}
+    \item \textbf{analyzer/}: Protocol analyzers dissect network protocols to generate events.
+    \begin{itemize}
+        \item \emph{ProtocolAnalyzer.cc / .h}: Base classes for protocol analyzers.
+        \item Protocol-specific subdirectories (e.g., \emph{http/}, \emph{dns/}) contain implementations for each analyzer.
+    \end{itemize}
+
+    \item \textbf{file\_analysis/}: Framework for file extraction and analysis.
+    \begin{itemize}
+        \item \emph{File.cc / .h}: Core classes for file analysis.
+        \item \emph{Analyzer.cc / .h}: Base and implementation classes for file analyzers.
+    \end{itemize}
+
+    \item \textbf{iosource/}: Input sources management, including packet capture.
+    \begin{itemize}
+        \item \emph{PktSrc.cc / .h}: Abstract base for packet sources.
+        \item \emph{PcapSrc.cc / .h}: pcap-based packet source implementation.
+    \end{itemize}
+
+    \item \textbf{logging/}: Zeek's structured logging framework.
+    \begin{itemize}
+        \item \emph{WriterFrontend.cc / .h}: Interfaces for log writers.
+        \item \emph{writers/}: Implementations for various log output formats.
+    \end{itemize}
+
+    \item \emph{main.cc}: Main entry point, initializing the environment and starting the processing loop.
+    
+    \item \emph{net\_util.cc / .h}: Network utility functions for address manipulation.
+
+    \item \textbf{policy/}: Script-level policy handlers for security policies and detections.
+
+    \item \emph{Reporter.cc / .h}: Reporting of warnings, errors, and runtime messages.
+
+    \item \textbf{script\_opt/}: Script execution optimizations for performance.
+
+    \item \textbf{threading/}: Manages threading and concurrency for parallelized operations.
+\end{itemize}
+
+\subsubsection{/scripts - Zeek Script Library}
+\begin{itemize}
+    \item \textbf{base/}: Default behaviors, protocol parsing, and logging scripts.
+    \begin{itemize}
+        \item \emph{protocols/}: Scripts for network protocol handling.
+        \item \emph{frameworks/}: Core frameworks like logging, notices, and file analysis.
+    \end{itemize}
+    \item \textbf{policy/}: Optional scripts for feature extensions or behavior modifications.
+\end{itemize}
+
+\subsubsection{/aux - Auxiliary Tools and Scripts}
+Tools and scripts supporting Zeek's core functionality, aiding in tasks like plugin development, testing, or integration.
+
+\subsubsection{/testing - Testing Framework and Suites}
+\begin{itemize}
+    \item \emph{btest/}: BTest testing framework scripts.
+    \item \emph{Traces/}: Network trace files for testing protocol analyzers and script behaviors.
+    \item \emph{Scripts/}: Defines test cases and expected outcomes.
+\end{itemize}
+
+\subsubsection{/doc - Documentation}
+Zeek's documentation, including user guides, developer documentation, and API references, primarily in reStructuredText format.
+
+\subsubsection{/cmake - Build System Configurations}
+CMake configurations and scripts for compiler options, dependencies, and build targets.
+
+\subsubsection{/zeekctl - Command-Line Control Interface}
+(For older versions) Contains `zeekctl` scripts and configurations. In newer versions, `zeekctl` is a separate project.
+
+\subsubsection{Plugin Support}
+Framework for extending Zeek's capabilities via plugins, typically developed in separate repositories or directories.
